@@ -1,4 +1,4 @@
-
+import numpy as np
 class Dataset:
     def __init__(self,*args,**kwargs):
         pass
@@ -20,7 +20,7 @@ class BatchSampler:
             self.num_samples = self.num_data // batch_size
         else:
             self.num_samples = self.num_data // batch_size + 1
-        indices = np.asange(self.num_data)
+        indices = np.arange(self.num_data)
         if shuffle:
             np.random.shuffle(indices)
         if drop_last:
@@ -33,7 +33,7 @@ class BatchSampler:
     def __iter__(self):
         batch_indices = []
         for i in range(self.num_samples):
-            if (i + 1) * self.batch_indices <= self.num_data:
+            if (i + 1) * self.batch_size <= self.num_data:
                 for idx in range(i * self.batch_size,(i + 1) * self.batch_size):
                     batch_indices.append(self.indices[idx])
                 yield batch_indices
@@ -44,8 +44,11 @@ class BatchSampler:
         if not self.drop_last and len(batch_indices) > 0:
             yield batch_indices
 
+
+
+
 class DataLoader:
-    def __init__(self,dataset,sampler=BatchSmapler,shuffle=False,batch_size=1,drop_last=False):
+    def __init__(self,dataset,sampler=BatchSampler,shuffle=False,batch_size=1,drop_last=False):
         self.dataset = dataset
         self.sampler = sampler(dataset,shuffle,batch_size,drop_last)
 

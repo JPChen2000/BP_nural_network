@@ -1,13 +1,15 @@
 import numpy as np
 
-
 class Tensor:
     def __init__(self,shape):
         self.data = np.zeros(shape=shape,dtype=np.float32)
         self.grad = np.zeros(shape=shape,dtype=np.float32)
     
     def clear_grad(self):
-        self.grad = np.zeros_like(self.gard)
+        self.grad = np.zeros_like(self.grad)
+
+    def __str__(self):
+        return "Tensor shape: {}, data: {}".format(self.data.shape, self.data)
 
 class Initializer:
     def __init__(self,shape=None,name='initializer'):
@@ -29,16 +31,18 @@ class Normal(Initializer):
     def __call__(self,shape=None,*args,**kwargs):
         if shape:
             self.shape = shape
+        assert shape is not None, "the shape of initializer must not be None."
         return np.random.normal(self.mean,self.std,size=self.shape)
 
 class Constant(Initializer):
     def __init__(self,value=0.,name='normal initializer',*args,**kwargs):
-        super().__init__(name=name,*args,**kwargs)
+        super().__init__(name=name, *args, **kwargs)
         self.value = value
-   
-   def __call__(self,shape=None,*args,**kwargs):
+
+    def __call__(self,shape=None,*args,**kwargs):
        if shape:
            self.shape = shape
+       assert shape is not None, "the shape of initializer must not be None."
        return self.value + np.zeros(shape=self.shape)
 
 
